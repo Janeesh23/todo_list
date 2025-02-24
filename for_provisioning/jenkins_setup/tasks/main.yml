@@ -1,0 +1,37 @@
+---
+- name: To Install OpenJDK 21
+  apt:
+    name: openjdk-21-jdk
+    state: present
+    update_cache: yes
+
+- name: Creating directory for keyring
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Jenkins repository key
+  get_url:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    dest: /usr/share/keyrings/jenkins-keyring.asc
+    mode: '0644'
+
+- name: Adding Jenkins repository
+  copy:
+    content: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/\n"
+    dest: /etc/apt/sources.list.d/jenkins.list
+    mode: '0644'
+
+- name: Update package list and install Jenkins
+  apt:
+    update_cache: yes
+    name: jenkins
+    state: present
+
+- name: Ensure Jenkins is started
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+

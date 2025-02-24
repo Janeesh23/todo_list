@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 # Initialize Flask App
 app = Flask(__name__)
+CORS(app)
 
 # Database Configuration (Use an environment variable for testing)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'  
